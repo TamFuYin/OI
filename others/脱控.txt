@@ -1,0 +1,3 @@
+WIN+X A
+taskkill /im student.exe /t /f
+taskkill /im smonitor.exe /t /f

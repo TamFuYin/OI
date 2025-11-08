@@ -1,0 +1,98 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // -------- Windows --------
+    {
+      "name": "Debug current file (Windows)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb", // 确保你的 gdb 路径正确
+      "setupCommands": [
+        {
+          "description": "Enable pretty printing",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Stop when assertion fails",
+          "text": "handle SIGABRT stop print pass",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Break on _wassert (Unicode assert)",
+          "text": "break _wassert",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Break on _assert (ANSI assert)",
+          "text": "break _assert",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Break on abort() as fallback",
+          "text": "break abort",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "build with g++ (Windows)",
+      "windows": {}
+    },
+
+    // -------- Linux / macOS --------
+    {
+      "name": "Debug current file (Linux/macOS)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/${fileBasenameNoExtension}",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb", // 确保你的 gdb 路径正确
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+            "description": "Break when assertion fails (Linux/macOS)",
+            "text": "handle SIGABRT stop",
+            "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "build with g++ (Linux/macOS)",
+      "linux": {},
+      "osx": {}
+    },
+    {
+      "name": "Run ImGui GUI",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/gui.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "D:/msys64/mingw64/bin/gdb.exe",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "Build GUI"
+    }
+  ]
+}

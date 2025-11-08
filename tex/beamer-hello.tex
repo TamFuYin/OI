@@ -1,0 +1,43 @@
+\documentclass{ctexbeamer}
+
+\usetheme{Madrid}      % 主题
+\usecolortheme{dolphin}
+
+% 页码显示
+\setbeamertemplate{footline}[frame number]
+
+% 移除右下角默认导航符号
+\setbeamertemplate{navigation symbols}{}
+
+% 上方点点导航（只显示章节）
+\setbeamertemplate{headline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.125ex]{section in head/foot}
+    \vskip1pt
+    \insertsectionnavigationhorizontal{\paperwidth}{}{}{}
+  \end{beamercolorbox}
+}
+
+\title{中文 Beamer 示例}
+\author{作者}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{引言}
+\begin{frame}{背景}
+背景内容
+\end{frame}
+
+\section{方法}
+\begin{frame}{算法}
+算法内容
+\end{frame}
+
+\section{实验}
+\begin{frame}{实验结果}
+实验内容
+\end{frame}
+
+\end{document}

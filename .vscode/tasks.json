@@ -1,0 +1,68 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build with g++ (Windows)",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++17",
+        "-Wall",
+        "-O0",
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}\\${fileBasenameNoExtension}.exe"
+      ],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"],
+      "windows": {}
+    },
+    {
+      "label": "build with g++ (Linux/macOS)",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++17",
+        "-Wall",
+        "-O0",
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}"
+      ],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"],
+      "linux": {},
+      "osx": {}
+    },
+    {
+        "label": "Build GUI",
+        "type": "shell",
+        "command": "D:/msys64/ucrt64/bin/g++.exe",
+        "args": [
+          "GUI_template.cpp",
+          "imgui/*.cpp",
+          "imgui/backends/imgui_impl_glfw.cpp",
+          "imgui/backends/imgui_impl_opengl3.cpp",
+          "-Iimgui",
+          "-Iimgui/backends",
+          "-lglfw3",
+          "-lopengl32",
+          "-lgdi32",
+          "-ldwmapi",
+          "-std=c++17",
+          "-o",
+          "gui.exe"
+        ],
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": ["$gcc"]
+      }
+  ]
+}
