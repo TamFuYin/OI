@@ -45,16 +45,12 @@ point solve(ll k){
         assert(pl[q.front()]==i);
         ++pl[q.front()];
         while(!q.empty()&&w(i,pl[q.back()])<w(q.back(),pl[q.back()])){
-            // printf(">> %d %d (i=%d q.back()=%d)\n",pl[q.back()],pr[q.back()],i,q.back());
-            // for(int j=pl[q.back()];j<=pr[q.back()];j++){
-                // point wij=w(i,j),wqj=w(q.back(),j);
-                // assert(w(i,j)<w(q.back(),j));
-            // }
             q.pop_back();
             if(!q.empty()) pr[q.back()]=n;
         }
         if(q.empty()) q.push_back(i),pl[i]=i+1,pr[i]=n;
         else{
+            if(!(w(i,n)<w(q.back(),n))) continue;
             int left=std::max(pl[q.back()],i+1),right=n;
             while(left<right){
                 int mid=left+right>>1;
@@ -76,5 +72,17 @@ int main(){
     scanf("%d%d",&n,&m);
     a[1]=0;
     for(int i=2;i<=n;i++) scanf("%d",a+i),a[i]+=a[i-1];
-    std::sort(a+1,a+n+1);
     for(int i=1;i<=n;i++) s[i]=s[i-1]+a[i];
+    solve(-10);
+    ll left=-1e12,right=0;
+    while(left<right){
+        ll mid=left+(right-left+1)/2;
+        if(solve(mid).x<=m) left=mid;
+        else right=mid-1;
+    }
+    point l=solve(left),r=solve(left+1);
+    assert(l.x<=m&&m<=r.x);
+    assert(r.y-l.y==left*(r.x-l.x));
+    if(l.x==r.x) printf("%lld\n",l.y);
+    else printf("%lld\n",l.y+(m-l.x)*left);
+}
