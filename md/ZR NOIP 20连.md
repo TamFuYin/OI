@@ -1114,6 +1114,8 @@ $$
 
 暴论：T4 < T3 < T2 < T1
 
+100+100+46+8
+
 ### T1
 
 注意到路径形如从一个叶子走到另一个叶子再走到别的叶子等等。
@@ -1161,3 +1163,168 @@ $$
 不难发现只要做六遍二维偏序即可。
 
 $3^{13}=1\ 594\ 323$，能过
+
+## Day20
+
+绝望了，怎么一题都不会。
+
+暴论：T4 < T3 < T2 < T1
+
+### T1
+
+构造题真的
+
+首先由于这个 $k$ 很大，所以我们前面肯定是放若干个 $m$ 凑出这个数量级。
+
+我一开始的思路是用二进制表示出来后面的东西。
+
+但是其实不用那么麻烦。
+
+首先，我们先让 $k$ 减去「基础值」$n-1$。
+
+然后我们让前 $\left\lfloor\dfrac{k}{m-1}\right\rfloor+1$ 个填上 $m$，后两个数填 $k\bmod (m-1)+1$，中间仍填 $1$。
+
+但是这种做法有一个致命的问题，在极端情况下，左右两边可能会相邻，此时中间不能假想为 $1$。
+
+然后我想了 2147483647 个补救方法，但是都不行，，，
+
+正解的构造与 $m$ 无关，也和我的任何一个思路无关。
+
+令 $x=\left\lfloor\dfrac{k-1}{n-2}\right\rfloor,y=(k-1)\bmod (n-2)$，然后构造序列为 $y+1$ 个 $x+1$ 拼上 $n-y-1$ 个 $x$。
+
+### T2
+
+赛时认为边的数量是 $O(n\log n)$ 量级的，很神秘，没有瞪出什么性质。
+
+实际上是 $O(n)$ 量级的！
+
+注意到对于每个 $y$ 至多存在一个比它小的数 $(y-n)\bmod y$ 与其相连。
+
+所以图是森林，暴力跳就是对的。
+
+### T3
+
+赛时瞪出来交换和取反两种操作不会重叠，所以可以 DP。
+
+一开始想要 CDQ 分治，但是显然不行。
+
+然后写出了如下 DP
+
+```c++
+#include<bits/stdc++.h>
+using ll=long long;
+template<typename T>void ckmin(T&a,T b){a=a<b?a:b;}
+const int N=1e5+10;
+ll f[N];
+char A[N],B[N];
+int pA[N],pB[N],qA[N],qB[N];
+const ll INF=1e17;
+ll _ss[2*N],*ss=_ss+N,_m2[2*N],*m2=_m2+N;
+int main(){
+    freopen("ex_mujica3.in","r",stdin);
+    freopen("ex_mujica3.out","w",stdout);
+    int T;scanf("%d",&T);
+    while(T--){
+        int n,X,Y;scanf("%d%d%d%s%s",&n,&X,&Y,A+1,B+1);
+        pA[0]=pB[0]=qA[0]=qB[0]=0;
+        for(int i=1;i<=n;i++)
+            if(A[i]=='1') pA[qA[i]=++pA[0]]=i;
+            else qA[i]=qA[i-1];
+        for(int i=1;i<=n;i++)
+            if(B[i]=='1') pB[qB[i]=++pB[0]]=i;
+            else qB[i]=qB[i-1];
+        f[0]=0;
+        ll m1=0,sx=0;
+        std::fill(m2-n,m2+n+1,INF);
+        std::fill(ss-n,ss+n+1,0);
+        m2[0]=0;
+        for(int i=1;i<=n;i++){
+            int t=qA[i]-qB[i];
+            sx+=(A[i]!=B[i])*Y;
+            if(A[i]=='1'){
+                for(int j=1;j<=qB[i];j++)
+                    ss[qA[i]-j]+=ll(i-pB[j])*X;
+            }
+            if(B[i]=='1'){
+                for(int j=1;j<=qA[i]-(A[i]=='1'&&B[i]=='1');j++)
+                    ss[j-qB[i]]+=ll(i-pA[j])*X;
+            }
+            f[i]=std::min(sx+m1,ss[t]+m2[t]);
+            ckmin(m2[t],f[i]-ss[t]);
+            ckmin(m1,f[i]-sx);
+            // for(int j=0;j<i;j++){
+                // ll w1=0,w2=0;
+                // for(int k=j+1;k<=i;k++) w1+=(A[k]!=B[k])*Y;
+                // if(qA[i]-qA[j]!=qB[i]-qB[j]) w2=1e16;
+                // else for(int k=1;k<=qA[i]-qA[j];k++) w2+=1ll*std::abs(pA[qA[j]+k]-pB[qB[j]+k])*X;
+            //     ckmin(f[i],f[j]+std::min(w1,w2));
+            // }
+            // printf("%lld %lld\n",f[i],g[i]);
+        }
+        printf("%lld\n",f[n]);
+    }
+}
+```
+
+然后我 不 会 优 化 了
+
+实际上找到上一次满足这个差的地方暴力转移过来就是对的了，时间复杂度是均摊 $O(n)$ 的，我直接裂开了……:facepalm:
+
+```c++
+#include<bits/stdc++.h>
+using ll=long long;
+template<typename T>void ckmin(T&a,T b){a=a<b?a:b;}
+const int N=1e5+10;
+ll f[N];
+char A[N],B[N];
+int pA[N],pB[N],qA[N],qB[N],cA,cB;
+const ll INF=1e17;
+int _las[2*N],*las=_las+N;
+int main(){
+    // freopen("ex_mujica4.in","r",stdin);
+    // freopen("ex_mujica4.out","w",stdout);
+    int T;scanf("%d",&T);
+    while(T--){
+        int n,X,Y;scanf("%d%d%d%s%s",&n,&X,&Y,A+1,B+1);
+        cA=cB=0;
+        for(int i=1;i<=n;i++)
+            if(A[i]=='1') pA[qA[i]=++cA]=i;
+            else qA[i]=qA[i-1];
+        for(int i=1;i<=n;i++)
+            if(B[i]=='1') pB[qB[i]=++cB]=i;
+            else qB[i]=qB[i-1];
+        f[0]=0;
+        ll m1=0,sx=0;
+        std::fill(las-n,las+n+1,-1);
+        las[0]=0;
+        for(int i=1;i<=n;i++){
+            sx+=(A[i]!=B[i])*Y;
+            f[i]=sx+m1;
+            int t=qA[i]-qB[i];
+            if(~las[t]){
+                ll w=0;
+                for(int j=qA[las[t]]+1;j<=qA[i];j++)
+                    w+=1ll*std::abs(pA[j]-pB[j-t])*X;
+                ckmin(f[i],f[las[t]]+w);
+            }
+            las[t]=i;
+            ckmin(m1,f[i]-sx);
+        }
+        printf("%lld\n",f[n]);
+    }
+}
+```
+
+不会分析算法复杂度导致的。
+
+服了又被卡常了
+
+### T4
+
+板板题，但是没调完，果然思路还是不够清晰。
+
+赛时主要是没有仔细考虑 DP 状态，只是混沌地把它看作一个「扩散」的过程。
+
+实际上这是一个典型的 DAG 式 DP（尽管不是 DAG），所以要倒着做。
+
+改完这一行就 A 了。
