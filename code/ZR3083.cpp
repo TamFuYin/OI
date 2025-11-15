@@ -127,8 +127,8 @@ int main(){
     //     function f=rndf(),g=rndf(),h=rndf();
     //     assert(chkeq((f*g)*h,f*(g*h)));
     // }
-    freopen("ex_a2.in","r",stdin);
-    freopen(".out","w",stdout);
+    // freopen("ex_a2.in","r",stdin);
+    // freopen(".out","w",stdout);
     std::cin.tie(0),std::ios::sync_with_stdio(0);
     int id,q;std::cin>>id>>n>>q;
     for(int i=1;i<=n;i++) std::cin>>a[i];
@@ -148,7 +148,7 @@ int main(){
             // function f={0,0};
             // for(int i=l;i<=r;i++) f=f^t[i];
             uint x;std::cin>>x;
-            std::cout<<(T==2?f.at(x):f.find(x))<<'\n';
+            std::cout<<(T==2?f.at(x):f.find(x))<<std::endl;
         }
         // flash();
         // puts("!");
