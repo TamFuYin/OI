@@ -76,3 +76,34 @@ Meet In The Middle DP 即可。
 
 前置知识：[Schreier–Sims algorithm](https://codeforces.com/blog/entry/111290)。
 
+## Peace with Magic
+
+我们先不考虑 $D_i$ 的限制，考虑把 $H_1,H_2,\dots,H_N$ 变高为 $X_1,X_2,\dots,X_N$ 的最小操作次数。
+
+区间加问题可以考虑差分数组，记 $H'_i=H_{i+1}-H_i,X'_i=X_{i+1}-X_i$，则一次操作相当于选择 $l,r$ 满足 $H'_i=0,\forall i\in[l,r)$，然后 $H_{l-1}+1$，$H_r-1$。
+
+然后这里的 $D_i$ 就相当于要求 $|X'_i|\le D_i$。
+
+现在我们的 DP 状态终于能与 $D$ 有关了，后面直接做 DP 即可。
+
+## Construction of Town
+
+注意到如果 $M=N-1$，则答案一定为菊花图。
+
+大胆猜想：对于 $M>N-1$ 的情况，一定是在菊花图上加边，且怎么加都行，因为答案的上界就是 $MX_1+(N(N-1)-M)X_2$。
+
+## Admired Person
+
+考虑对 $A$ 和 $B$ 都排序一下，然后做一下 $O(n^2)$ DP 即可。
+
+## Product Matrix
+
+考虑插值，分别带入 $1,2,\dots,2^M$，则我们相当于每次给维护的矩阵乘上 $\dfrac{P(2^{i+M})}{P(2^{i})}$，但是矩阵不一定有逆……
+
+其实定长区间信息维护有很简单的方法，最简单的一种是每 $M-1$ 分一块，然后每块内维护前缀信息和后缀信息，每次合并一下即可。
+
+## New School Term
+
+经典题啊，我绝对做过
+
+贪心从大到小考虑，用 2-SAT 维护。
