@@ -1,46 +1,36 @@
 #include<bits/stdc++.h>
 const int MOD=998244353;
-using ll=long long;
 int qpow(int a,int b){
-    int c=1;
+    int ret=1;
     while(b){
-        if(b&1) c=(ll)c*a%MOD;
-        a=(ll)a*a%MOD;b>>=1;
+        if(b&1) ret=1ll*ret*a%MOD;
+        a=1ll*a*a%MOD;b>>=1;
     }
-    return c;
+    return ret;
 }
-std::vector<int> BM(const std::vector<int> &a){
-    std::vector<int> f(0);
-    int k=-114514,deltak;
-    std::vector<int> fk(0);
+using poly=std::basic_string<int>;
+poly BM(poly a){
+    poly f,fl;int l=-1,dell;
     for(int i=0;i<a.size();i++){
-        // printf("%d",i);
-        int delta=a[i];
-        for(int j=0;j<f.size();j++){
-            (delta+=MOD-(ll)a[i-j-1]*f[j]%MOD)%=MOD;
-        }
-        if(delta==0) continue;
-        std::vector<int> fi=f;
-        if(k<0) for(int j=0;j<i;j++) f.push_back(0);
+        int del=a[i];
+        for(int j=0;j<f.size();j++) (del+=MOD-1ll*a[i-j-1]*f[j]%MOD)%=MOD;
+        if(del==0) continue;
+        if(l==-1) f=poly(i+1,0),l=i,dell=del;
         else{
-	        int rota=(ll)delta*qpow(deltak,MOD-2)%MOD;
-	        if(f.size()<i-k+fk.size()) f.resize(i-k+fk.size());
-	        (f[i-k-1]+=rota)%=MOD;
-	        for(int j=0;j<fk.size();j++)
-	            (f[i-k+j]+=MOD-(ll)rota*fk[j]%MOD)%=MOD;
-        }
-        if(fi.size()-i<fk.size()-k){
-            fk=fi;
-            k=i;
-            deltak=delta;
+            poly g=poly(i-l-1,0)+(MOD-1)+fl;
+            int k=MOD-1ll*del*qpow(dell,MOD-2)%MOD;
+            if(g.size()>f.size()) fl=f,l=i,dell=del;
+            f.resize(std::max(f.size(),g.size()));
+            for(int i=0;i<g.size();i++) (f[i]+=1ll*k*g[i]%MOD)%=MOD;
         }
     }
     return f;
 }
 int main(){
-    int n;scanf("%d",&n);
-    std::vector<int> a(n);
-    for(int i=0;i<n;i++) scanf("%d",&a[i]);
-    std::vector<int> f=BM(a);
-    for(int i:f) printf("%d ",i);
+    std::ios::sync_with_stdio(0),std::cin.tie(0);
+    int n;std::cin>>n;poly a(n,0);
+    for(int i=0;i<n;i++) std::cin>>a[i];
+    poly f(BM(a));
+    std::cout<<f.size()<<'\n';
+    for(int i=0;i<f.size();i++) std::cout<<f[i]<<' ';
 }
